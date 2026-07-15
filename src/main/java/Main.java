@@ -25,12 +25,10 @@ public class Main {
                     app.viewList();
                     break;
                 case "삭제":
-                    int delId = Integer.parseInt(input.substring(6, input.length()));
-                    app.deletePost(delId);
+                    app.deletePost(Integer.parseInt(input.substring(6, input.length())));
                     break;
                 case "수정":
-                    int uId = Integer.parseInt(input.substring(6, input.length()));
-                    app.updatePost(uId);
+                    app.updatePost(Integer.parseInt(input.substring(6, input.length())));
                     break;
             }
 
