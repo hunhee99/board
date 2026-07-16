@@ -1,9 +1,11 @@
+package com.ll.wiseSaying;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 
-class FileManager {
+class WiseSayingRepository {
     private static final String dirAddress = "db/wiseSaying/";
     private static final String lastIdFile = dirAddress + "lastId.txt";
 
@@ -13,7 +15,7 @@ class FileManager {
         try {
             Files.createDirectories(Path.of(dirAddress));
         } catch (IOException e) {
-            System.out.println("[" + dirAddress + " 폴더 생성 실패]: " + e.getMessage());
+            throw new RuntimeException("[" + dirAddress + " 폴더 생성 실패]", e);
         }
     }
 
@@ -24,7 +26,7 @@ class FileManager {
         try {
             Files.writeString(Path.of(lastIdFile), String.valueOf(id));
         } catch (IOException e) {
-            System.out.println("[" + lastIdFile + " 파일 생성 실패]: " + e.getMessage());
+            throw new RuntimeException("[" + lastIdFile + " 파일 생성 실패]", e);
         }
     }
 
@@ -40,19 +42,19 @@ class FileManager {
             return Integer.parseInt(Files.readString(path).trim());
         }
         catch (IOException e) {
-            System.out.println("[" + lastIdFile + " 파일 조회 실패]: " + e.getMessage());
-            return 0;
+            throw new RuntimeException("[" + lastIdFile + " 파일 조회 실패]", e);
         }
     }
 
 
     // {id}.json
     // 파일 생성 및 Update
-    public static void createJsonFile(int id, String json) {
+    public static void createJsonFile(WiseSaying post) {
+        int id = post.getId();
         try {
-            Files.writeString(Path.of(dirAddress + id + ".json"), json);
+            Files.writeString(Path.of(dirAddress + id + ".json"), post.toJson());
         } catch (IOException e) {
-            System.out.println("[" + dirAddress + id + ".json 파일 생성 실패]: " + e.getMessage());
+            throw new RuntimeException("[" + dirAddress + id + ".json 파일 생성 실패]", e);
         }
     }
     // 파일 삭제
@@ -61,13 +63,13 @@ class FileManager {
             Files.deleteIfExists(Path.of(dirAddress + id + ".json"));
         }
         catch (IOException e) {
-            System.out.println("[" + dirAddress + id + ".json 파일 삭제 실패]: " + e.getMessage());
+            throw new RuntimeException("[" + dirAddress + id + ".json 파일 삭제 실패]", e);
         }
     }
 
     // 파일 조회 (전부 가져오기)
-    public static HashMap<Integer, Post> loadPosts(int maxId){
-        HashMap<Integer, Post> posts = new HashMap<>();
+    public static HashMap<Integer, WiseSaying> loadPosts(int maxId){
+        HashMap<Integer, WiseSaying> posts = new HashMap<>();
         for (int i = 1; i <= maxId; i++){
             Path filePath = Path.of(dirAddress + i + ".json");
 
@@ -76,11 +78,11 @@ class FileManager {
             }
             try {
                 String contents = Files.readString(filePath);
-                posts.put(i, parseJson(contents));
+                WiseSaying post = parseJson(contents);
+                posts.put(post.getId(), post);
             }
             catch (IOException e){
-                System.out.println("[" + dirAddress + i + ".json 파일 읽어오기 실패]: " + e.getMessage());
-                continue;
+                throw new RuntimeException("[" + dirAddress + i + ".json 파일 읽어오기 실패]", e);
             }
         }
 
@@ -88,21 +90,20 @@ class FileManager {
     }
 
     // Json 파싱 -> Post로 반환
-    private static Post parseJson(String json) {
+    private static WiseSaying parseJson(String json) {
+        int id = Integer.parseInt(extractValue(json, "id"));
         String author = extractValue(json, "author");
         String content = extractValue(json, "content");
-        return new Post(author, content);
+        return new WiseSaying(id, author, content);
     }
 
     // Value 추출
     private static String extractValue(String json, String key){
-        String pattern = "\"" + key + "\": \"";
-        int valueStart = json.indexOf(pattern) + pattern.length();
-        int valueEnd = json.indexOf("\"",  valueStart);
-
+        String startPattern = key.equals("id") ? "\"" + key + "\": " : "\"" + key + "\": \"";
+        String endPattern = key.equals("id") ? "," : "\"";
+        int valueStart = json.indexOf(startPattern) + startPattern.length();
+        int valueEnd = json.indexOf(endPattern,  valueStart);
         return json.substring(valueStart, valueEnd);
     }
-
-
 
 }
