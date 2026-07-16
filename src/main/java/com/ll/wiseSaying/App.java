@@ -3,9 +3,7 @@ package com.ll.wiseSaying;
 import java.util.Scanner;
 
 public class App {
-    public static void run() {
-
-        Scanner scanner = new Scanner(System.in);
+    public static void run(Scanner scanner) {
         WiseSayingService app = new WiseSayingService();
         String input;
 
