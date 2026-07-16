@@ -17,6 +17,9 @@ public class WiseSayingController {
             case "수정":
                 rewritePost(app, scanner, param);
                 break;
+            case "빌드":
+                build();
+                break;
         }
     }
 
@@ -68,5 +71,12 @@ public class WiseSayingController {
             return;
         }
         System.out.println(param + "번 명언은 존재하지 않습니다.");
+    }
+
+    // 빌드
+    private static void build(){
+        int maxId = WiseSayingRepository.getLastId();
+        WiseSayingRepository.buildDataJson(maxId);
+        System.out.println("data.json 파일의 내용이 갱신되었습니다.");
     }
 }

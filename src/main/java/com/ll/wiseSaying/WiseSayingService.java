@@ -38,7 +38,6 @@ class WiseSayingService {
 
     }
 
-
     public boolean existPost(int postId) {
         return postList.containsKey(postId);
     }
