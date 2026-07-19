@@ -3,7 +3,14 @@ package com.ll.wiseSaying;
 import java.util.Scanner;
 
 public class App {
-    public static void run(Scanner scanner) {
+    private Scanner scanner;
+
+    public App(Scanner scanner){
+        this.scanner = scanner;
+    }
+
+
+    public void run() {
         WiseSayingService app = new WiseSayingService();
         String input;
 
@@ -12,7 +19,7 @@ public class App {
         while (true) {
             // 입력
             System.out.print("명령) ");
-            input = scanner.nextLine();
+            input = this.scanner.nextLine();
             int inputLength = input.length();
             int param = -1;
 
@@ -23,13 +30,13 @@ public class App {
             }
 
             if (command.equals("종료")) {
-                scanner.close();
+                this.scanner.close();
                 return;
             }
 
             // 예외 처리를 아직 모르겠음
             try {
-                WiseSayingController.controller(app, scanner, command, param);
+                WiseSayingController.controller(app, this.scanner, command, param);
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
             }
