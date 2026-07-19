@@ -28,4 +28,19 @@ public class AppTest {
         assertThat(out).contains("작가 : ");
 
     }
+
+    @Test
+    @DisplayName("등록시 생선된 명언번호 노출")
+    void t3(){
+        String out = AppTestRunner.run("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                종료
+                """);
+
+        assertThat(out).contains("번 명언이 등록되었습니다.");
+
+    }
+
 }
