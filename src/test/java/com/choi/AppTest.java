@@ -258,12 +258,15 @@ public class AppTest {
     @DisplayName("페이징")
     void t12(){
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 10; i++) {
-            sb.append("등록\n&d\n%d\n".formatted(i));
+        for (int i = 1; i <= 10; i++) {
+            sb.append("등록\n명언 " + i + "\n작자미상 " + i + "\n");
         }
-        sb.append("목록\n");
-        sb.append("목록?page=2\n");
-        sb.append("종료\n");
+        sb.append("""
+                목록
+                목록?page=2
+                종료
+                """);
+
 
         String out = AppTestRunner.run(sb.toString());
 

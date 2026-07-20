@@ -1,6 +1,7 @@
 package com.ll.wiseSaying;
 
 import java.util.HashMap;
+import java.util.Set;
 
 class WiseSayingService {
     HashMap<Integer, WiseSaying> postList;
@@ -45,5 +46,5 @@ class WiseSayingService {
     public WiseSaying getPost(int postId) {
         return postList.get(postId);
     }
-
+    public Set<Integer> getPostsIdSet() { return postList.keySet(); };
 }

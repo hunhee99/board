@@ -1,12 +1,10 @@
 package com.ll.wiseSaying;
 
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class WiseSayingController {
     public static void controller(WiseSayingService app, Scanner scanner, String command, String param){
         HashMap<String, String> paramsMap = parseParams(param);
-
 
         switch (command) {
             case "등록":
@@ -40,25 +38,53 @@ public class WiseSayingController {
     }
 
     // 목록
-    private static void printPosts(WiseSayingService app, HashMap<String , String> paramsMap){
+    private static void printPosts(WiseSayingService app, HashMap<String, String> paramsMap){
         String keywordType = paramsMap.get("keywordType");
         String keyword = paramsMap.get("keyword");
         boolean isAuthor = keywordType.equals("author");
 
-        System.out.println("----------------------");
-        System.out.println("검색타입 : " + keywordType);
-        System.out.println("검색어 : " + keyword);
-        System.out.println("----------------------");
+        List<Integer> keyList = new ArrayList<>(app.getPostsIdSet());
+        Collections.sort(keyList, Collections.reverseOrder());
+
+        int page = Integer.parseInt(paramsMap.get("page"));
+        int start = (page - 1) * 5;
+        int end = page * 5;
+        int allPages = (int) Math.ceil((keyList.size()) / 5.0);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("페이지 :");
+        for (int i = 1; i <= allPages; i++) {
+            if (i == page){
+                sb.append(" [" + i + "] /");
+                continue;
+            }
+            sb.append(" " + i + " /");
+        }
+
+
+        // 검색어가 있을때만
+        if ((!keywordType.equals(".*")) && (!keyword.equals(".*"))){
+            System.out.println("----------------------");
+            System.out.println("검색타입 : " + keywordType);
+            System.out.println("검색어 : " + keyword);
+            System.out.println("----------------------");
+            keywordType = ".*" +  keywordType + ".*";
+            keyword = ".*" +  keyword + ".*";
+        }
+
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
-        for (int i = app.getMaxId(); i > 0; i--) {
-            if (app.existPost(i)) {
-                WiseSaying tempPost = app.getPost(i);
-                if ((tempPost.getAuthor().contains(keyword) && isAuthor) || (tempPost.getContent().contains(keyword) && (!isAuthor))) {
-                    System.out.println(i + " / " + tempPost.getAuthor() + " / " + tempPost.getContent());
-                }
+
+
+
+        for (int i = start; i < end && i < keyList.size(); i++) {
+            WiseSaying tempPost = app.getPost(keyList.get(i));
+            if ((tempPost.getAuthor().matches(keyword) && isAuthor) || (tempPost.getContent().matches(keyword) && (!isAuthor))) {
+                System.out.println(tempPost.getId() + " / " + tempPost.getAuthor() + " / " + tempPost.getContent());
             }
         }
+        System.out.println("----------------------");
+        System.out.println(sb.toString().substring(0, sb.toString().length() - 2));
     }
 
     // 삭제
@@ -97,11 +123,11 @@ public class WiseSayingController {
 
     // 파라미터 파싱
     private static HashMap<String, String> parseParams(String param){
-        HashMap<String, String> parsed = new HashMap<>();
-
-        if (param.equals("False")) {
-            return parsed;
-        }
+        HashMap<String, String> parsed = new HashMap(){{
+            put("page", "1");
+            put("keywordType", ".*");
+            put("keyword", ".*");
+        }};
 
         String[] params = param.split("&");
 

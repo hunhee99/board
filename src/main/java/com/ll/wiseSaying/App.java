@@ -21,7 +21,7 @@ public class App {
             System.out.print("명령) ");
             input = this.scanner.nextLine();
             int inputLength = input.length();
-            String param = "False";
+            String param = "page=1";
 
             String command = input.substring(0, 2);
             if (input.contains("?")){
