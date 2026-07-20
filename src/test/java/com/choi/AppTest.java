@@ -151,4 +151,31 @@ public class AppTest {
                 2 / 홍길동 / 현재와 자신을 사랑하라.
                 """);
     }
+
+    @Test
+    @DisplayName("파일을 통한 영속성")
+    void t9(){
+        String out1 = AppTestRunner.run("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                과거에 집착하지 마라.
+                작자미상
+                목록
+                종료
+                """);
+        String out2 = AppTestRunner.run("""
+                목록
+                종료
+                """);
+
+        assertThat(out2).contains("""
+                번호 / 작가 / 명언
+                ----------------------
+                2 / 작자미상 / 과거에 집착하지 마라.
+                1 / 작자미상 / 현재를 사랑하라.
+                """);
+
+    }
 }
