@@ -86,4 +86,22 @@ public class AppTest {
                 """);
     }
 
+    @Test
+    @DisplayName("명언삭제")
+    void t6(){
+        String out = AppTestRunner.run("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                과거에 집착하지 마라.
+                작자미상
+                목록
+                삭제?id=1
+                종료
+                """);
+
+        assertThat(out).contains("1번 명언이 삭제되었습니다.");
+    }
+
 }
