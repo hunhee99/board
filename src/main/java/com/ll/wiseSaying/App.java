@@ -21,12 +21,11 @@ public class App {
             System.out.print("명령) ");
             input = this.scanner.nextLine();
             int inputLength = input.length();
-            int param = -1;
+            String param = "False";
 
             String command = input.substring(0, 2);
-            if ((inputLength) > 2 && (input.contains("="))){
-                int paramStartIdx = input.indexOf('=') + 1;
-                param = Integer.parseInt(input.substring(paramStartIdx, inputLength));
+            if (input.contains("?")){
+                param = input.substring(input.indexOf("?") + 1, inputLength);
             }
 
             if (command.equals("종료")) {

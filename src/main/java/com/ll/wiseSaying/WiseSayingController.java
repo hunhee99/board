@@ -1,21 +1,25 @@
 package com.ll.wiseSaying;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class WiseSayingController {
-    public static void controller(WiseSayingService app, Scanner scanner, String command, int param){
+    public static void controller(WiseSayingService app, Scanner scanner, String command, String param){
+        HashMap<String, String> paramsMap = parseParams(param);
+
+
         switch (command) {
             case "등록":
                 addPost(app, scanner);
                 break;
             case "목록":
-                printPosts(app);
+                printPosts(app, paramsMap);
                 break;
             case "삭제":
-                removePost(app, param);
+                removePost(app, Integer.parseInt(paramsMap.get("id")));
                 break;
             case "수정":
-                rewritePost(app, scanner, param);
+                rewritePost(app, scanner, Integer.parseInt(paramsMap.get("id")));
                 break;
             case "빌드":
                 build();
@@ -36,12 +40,23 @@ public class WiseSayingController {
     }
 
     // 목록
-    private static void printPosts(WiseSayingService app){
+    private static void printPosts(WiseSayingService app, HashMap<String , String> paramsMap){
+        String keywordType = paramsMap.get("keywordType");
+        String keyword = paramsMap.get("keyword");
+        boolean isAuthor = keywordType.equals("author");
+
+        System.out.println("----------------------");
+        System.out.println("검색타입 : " + keywordType);
+        System.out.println("검색어 : " + keyword);
+        System.out.println("----------------------");
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
-        for (int i = app.id; i > 0; i--) {
+        for (int i = app.getMaxId(); i > 0; i--) {
             if (app.existPost(i)) {
-                System.out.println(i + " / " + app.getPost(i).getAuthor() + " / " + app.getPost(i).getContent());
+                WiseSaying tempPost = app.getPost(i);
+                if ((tempPost.getAuthor().contains(keyword) && isAuthor) || (tempPost.getContent().contains(keyword) && (!isAuthor))) {
+                    System.out.println(i + " / " + tempPost.getAuthor() + " / " + tempPost.getContent());
+                }
             }
         }
     }
@@ -78,5 +93,23 @@ public class WiseSayingController {
         int maxId = WiseSayingRepository.getLastId();
         WiseSayingRepository.buildDataJson(maxId);
         System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+    }
+
+    // 파라미터 파싱
+    private static HashMap<String, String> parseParams(String param){
+        HashMap<String, String> parsed = new HashMap<>();
+
+        if (param.equals("False")) {
+            return parsed;
+        }
+
+        String[] params = param.split("&");
+
+        for (int i = 0; i < params.length; i++) {
+            String[] keyValue = params[i].split("=");
+            parsed.put(keyValue[0], keyValue[1]);
+        }
+
+        return parsed;
     }
 }

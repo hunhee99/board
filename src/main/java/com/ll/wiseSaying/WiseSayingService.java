@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 class WiseSayingService {
     HashMap<Integer, WiseSaying> postList;
-    int id = 0;
+    private int id = 0;
 
     public WiseSayingService() {
         WiseSayingRepository.createDir();
@@ -38,10 +38,12 @@ class WiseSayingService {
 
     }
 
+    public int getMaxId(){ return id; }
     public boolean existPost(int postId) {
         return postList.containsKey(postId);
     }
     public WiseSaying getPost(int postId) {
         return postList.get(postId);
     }
+
 }

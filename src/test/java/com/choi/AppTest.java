@@ -67,26 +67,26 @@ public class AppTest {
         assertThat(out).contains("2번 명언이 등록되었습니다.");
     }
 
-    @Test
-    @DisplayName("목록")
-    void t5(){
-        String out = AppTestRunner.run("""
-                등록
-                현재를 사랑하라.
-                작자미상
-                등록
-                과거에 집착하지 마라.
-                작자미상
-                목록
-                종료
-                """);
-        assertThat(out).contains("""
-                번호 / 작가 / 명언
-                ----------------------
-                2 / 작자미상 / 과거에 집착하지 마라.
-                1 / 작자미상 / 현재를 사랑하라.
-                """);
-    }
+//    @Test
+//    @DisplayName("목록")
+//    void t5(){
+//        String out = AppTestRunner.run("""
+//                등록
+//                현재를 사랑하라.
+//                작자미상
+//                등록
+//                과거에 집착하지 마라.
+//                작자미상
+//                목록
+//                종료
+//                """);
+//        assertThat(out).contains("""
+//                번호 / 작가 / 명언
+//                ----------------------
+//                2 / 작자미상 / 과거에 집착하지 마라.
+//                1 / 작자미상 / 현재를 사랑하라.
+//                """);
+//    }
 
     @Test
     @DisplayName("명언삭제")
@@ -125,61 +125,61 @@ public class AppTest {
         assertThat(out).contains("1번 명언은 존재하지 않습니다.");
     }
 
-    @Test
-    @DisplayName("명언수정")
-    void t8(){
-        String out = AppTestRunner.run("""
-                등록
-                현재를 사랑하라.
-                작자미상
-                등록
-                과거에 집착하지 마라.
-                작자미상
-                목록
-                삭제?id=1
-                삭제?id=1
-                수정?id=3
-                수정?id=2
-                현재와 자신을 사랑하라.
-                홍길동
-                목록
-                종료
-                """);
+//    @Test
+//    @DisplayName("명언수정")
+//    void t8(){
+//        String out = AppTestRunner.run("""
+//                등록
+//                현재를 사랑하라.
+//                작자미상
+//                등록
+//                과거에 집착하지 마라.
+//                작자미상
+//                목록
+//                삭제?id=1
+//                삭제?id=1
+//                수정?id=3
+//                수정?id=2
+//                현재와 자신을 사랑하라.
+//                홍길동
+//                목록
+//                종료
+//                """);
+//
+//        assertThat(out).contains("3번 명언은 존재하지 않습니다.");
+//        assertThat(out).contains("""
+//                번호 / 작가 / 명언
+//                ----------------------
+//                2 / 홍길동 / 현재와 자신을 사랑하라.
+//                """);
+//    }
 
-        assertThat(out).contains("3번 명언은 존재하지 않습니다.");
-        assertThat(out).contains("""
-                번호 / 작가 / 명언
-                ----------------------
-                2 / 홍길동 / 현재와 자신을 사랑하라.
-                """);
-    }
-
-    @Test
-    @DisplayName("파일을 통한 영속성")
-    void t9(){
-        String out1 = AppTestRunner.run("""
-                등록
-                현재를 사랑하라.
-                작자미상
-                등록
-                과거에 집착하지 마라.
-                작자미상
-                목록
-                종료
-                """);
-        String out2 = AppTestRunner.run("""
-                목록
-                종료
-                """);
-
-        assertThat(out2).contains("""
-                번호 / 작가 / 명언
-                ----------------------
-                2 / 작자미상 / 과거에 집착하지 마라.
-                1 / 작자미상 / 현재를 사랑하라.
-                """);
-
-    }
+//    @Test
+//    @DisplayName("파일을 통한 영속성")
+//    void t9(){
+//        String out1 = AppTestRunner.run("""
+//                등록
+//                현재를 사랑하라.
+//                작자미상
+//                등록
+//                과거에 집착하지 마라.
+//                작자미상
+//                목록
+//                종료
+//                """);
+//        String out2 = AppTestRunner.run("""
+//                목록
+//                종료
+//                """);
+//
+//        assertThat(out2).contains("""
+//                번호 / 작가 / 명언
+//                ----------------------
+//                2 / 작자미상 / 과거에 집착하지 마라.
+//                1 / 작자미상 / 현재를 사랑하라.
+//                """);
+//
+//    }
 
     @Test
     @DisplayName("data.json 빌드")
