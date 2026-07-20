@@ -4,13 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 public class TestUtil {
     private static PrintStream ORIGINAL_OUT = System.out;
     private static PrintStream CURRENT_OUT = System.out;
     private static final String DB_PATH = "db";
-
+    private static final String DB_JSON_PATH = DB_PATH + "/wiseSaying/data.json";
     public static Scanner genScanner(String input) {
         return new Scanner(input);
     }
@@ -46,5 +47,10 @@ public class TestUtil {
             }
         }
         file.delete();
+    }
+
+    public static String readDataJson() throws IOException {
+        File file = new File(DB_JSON_PATH);
+        return Files.readString(file.toPath()).trim();
     }
 }

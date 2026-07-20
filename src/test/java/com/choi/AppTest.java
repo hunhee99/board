@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AppTest {
@@ -176,6 +178,41 @@ public class AppTest {
                 2 / 작자미상 / 과거에 집착하지 마라.
                 1 / 작자미상 / 현재를 사랑하라.
                 """);
+
+    }
+
+    @Test
+    @DisplayName("data.json 빌드")
+    void t10() throws IOException {
+        String out = AppTestRunner.run("""
+                등록
+                현재를 사랑하라.
+                작자미상
+                등록
+                과거에 집착하지 마라.
+                작자미상
+                목록
+                삭제?id=1
+                삭제?id=1
+                수정?id=2
+                현재와 자신을 사랑하라.
+                홍길동
+                목록
+                빌드
+                종료
+                """);
+
+        assertThat(out).contains("data.json 파일의 내용이 갱신되었습니다.");
+
+
+        assertThat(TestUtil.readDataJson()).isEqualTo("""
+                [
+                  {
+                    "id": 2,
+                    "content": "현재와 자신을 사랑하라.",
+                    "author": "홍길동"
+                  }
+                """ + "]");
 
     }
 }
